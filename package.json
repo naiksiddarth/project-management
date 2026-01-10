@@ -7,5 +7,5 @@
     "test": "node index.js"
   },
   "author": "Siddarth Naik",
-  "license": "ISC"
+  "license": "MIT"
 }
