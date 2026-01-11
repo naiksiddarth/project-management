@@ -3,11 +3,13 @@ import cors from "cors"
 
 const app = express()
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
-}))
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+)
 
 app.get("/", (req, res) => {
     res.send("Hello")
