@@ -38,4 +38,8 @@ const forgotPasswordMailgenContent = (username, passwordResetUrl) => {
     }
 }
 
-export { emailVerficationMailgenContent, forgotPasswordMailgenContent }
+const sendEmail = (options) => {
+    console.log(options.verificationUrl)
+}
+
+export { emailVerficationMailgenContent, forgotPasswordMailgenContent, sendEmail }
