@@ -17,7 +17,7 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
-const regesterUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
     const {email, username, password, role} = req.body
 
     const existingUser = await User.findOne({
@@ -66,4 +66,6 @@ const regesterUser = asyncHandler(async (req, res) => {
 
 })
 
-export { regesterUser }
+// const login
+
+export { registerUser }
