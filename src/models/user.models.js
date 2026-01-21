@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
+import { ApiError } from "../utils/api-error.js"
 
 const userSchema = new Schema(
     {
@@ -97,6 +98,15 @@ userSchema.methods.generateTemporaryToken = function () {
     const hasedToken = crypto.createHash("sha256").update(unHashedToken).digest("hex")
     const tokenExpiry = Date.now() + (20*60*1000) // 20 mins 
     return { unHashedToken, hasedToken, tokenExpiry }
+}
+
+userSchema.methods.checkPassword = async function (password) {
+    const savedPassword = this.password
+    try{
+        return await bcrypt.compare(password, savedPassword)
+    } catch {
+        throw new ApiError(400, "Error checking password")
+    }
 }
 
 export const User = mongoose.model("User", userSchema)
