@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/api-response.js"
 import { ApiError } from "../utils/api-error.js"
 import { asyncHandler } from "../utils/async-handler.js"
 import { sendEmail } from "../utils/mail.js"
+import { AccessCookieOptions, RefreshCookieOptions } from "../utils/constants.js"
 
 const generateAccessAndRefreshToken = async (userId) => {
     try{
@@ -38,7 +39,6 @@ const registerUser = asyncHandler(async (req, res) => {
     const { unHashedToken, hasedToken, tokenExpiry } = user.generateTemporaryToken()
 
     user.emailVerificationToken = hasedToken
-    console.log(hasedToken)
     user.emailVerificationExpiry = tokenExpiry
     await user.save({ validateBeforeSave: false })
 
@@ -66,6 +66,31 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-// const login
+const loginUser = asyncHandler(async (req, res) => {
+    const {username, password, email} = req.body
 
-export { registerUser }
+    const user = await User.findOne({username: username}).select("username email avatar refreshToken password")
+    if (!user){
+        throw new ApiError(400, "User not found")
+    }
+    if(user.checkPassword(password)){
+        const { refreshToken, accessToken } = await generateAccessAndRefreshToken(user._id)
+    
+        return res
+        .status(200)
+        .cookie("refreshToken", refreshToken, RefreshCookieOptions)
+        .cookie("accessToken", accessToken, AccessCookieOptions)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    user: user,
+                    accessToken: accessToken
+                },
+                "User logged in successfully"
+            )
+        )
+    }
+})
+
+export { registerUser, loginUser }
