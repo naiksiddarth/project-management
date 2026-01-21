@@ -1,3 +1,9 @@
+const baseAuthCookieOption = {
+    HttpOnly: true,
+    SameSite: "none",
+    secure: true
+}
+
 export const UserRoleEnum = {
     ADMIN: "admin",
     PROJECT_ADMIN: "project_admin",
@@ -13,3 +19,14 @@ export const TaskStatusEnum = {
 }
 
 export const AvailableTaskStatuses = Object.values(TaskStatusEnum)
+
+
+export const AccessCookieOptions = {
+    ...baseAuthCookieOption,
+    path: "/"
+}
+
+export const RefreshCookieOptions = {
+    ...baseAuthCookieOption,
+    path: "/api/v1/auth/refresh-token"
+}
