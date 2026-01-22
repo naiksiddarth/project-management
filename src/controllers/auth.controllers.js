@@ -96,6 +96,15 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
+const logoutUser = asyncHandler(async (req, res) => {
+    req.user.refreshToken = ""
+    await req.user.save()
 
+    res
+        .status(200)
+        .clearCookie("accessToken", AccessCookieOptions)
+        .clearCookie("refreshToken", RefreshCookieOptions)
+        .send()
+})
 
 export { registerUser, loginUser, logoutUser }
