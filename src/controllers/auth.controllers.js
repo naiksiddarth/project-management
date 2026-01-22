@@ -13,7 +13,7 @@ const generateAccessAndRefreshToken = async (userId) => {
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
         return { accessToken, refreshToken}
-    } catch{
+    } catch {
         throw new ApiError(500, "Something went wrong while generating tokens")
     }
 }
@@ -69,7 +69,10 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const {username, password, email} = req.body
 
-    const user = await User.findOne({username: username}).select("username email avatar refreshToken password")
+    const user = await User.findOne({
+        $or: [{ username }, { email }]
+    }
+    ).select("username email avatar refreshToken password")
     if (!user){
         throw new ApiError(400, "User not found")
     }
@@ -93,4 +96,6 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { registerUser, loginUser }
+
+
+export { registerUser, loginUser, logoutUser }
