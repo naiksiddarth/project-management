@@ -32,3 +32,22 @@ export const createProject = asyncHandler(async (req, res) => {
             )
         )
 })
+
+export const getProjects = asyncHandler(async (req, res) => {
+    const user = req.user
+    if(!user){
+        throw new ApiError(400, "Access Token verification Failed")
+    }
+
+    const projects = await Project.find({createdBy: new mongoose.Types.ObjectId(user._id) })
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    projects: projects
+                }
+            )
+        )
+})
